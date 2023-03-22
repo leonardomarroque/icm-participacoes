@@ -1,15 +1,15 @@
 import Grupo from "@/core/grupo/Grupo";
-import Entrada from "./Entrada";
+import Entrada from "../Entrada";
 import { useState } from 'react';
-import Botao from "./Botao";
+import Botao from "../Botao";
 
-interface FormularioProps {
+interface FormularioGrupoProps {
     grupo: Grupo
     cancelado?: () => void
     grupoMudou?: (grupo: Grupo) => void
 }
 
-export default function Formulario (props: FormularioProps) {
+export default function FormularioGrupo (props: FormularioGrupoProps) {
     const id = props.grupo?.id ?? null
     const [nome, setNome] = useState(props.grupo?.nome ?? '')
     const [quantidadeEventos, setQuantidadeEventos] = useState(props.grupo?.quantidadeEventos ?? 0)

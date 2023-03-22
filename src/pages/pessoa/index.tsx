@@ -1,26 +1,26 @@
 import { Inter } from 'next/font/google'
 import Layout from '@/components/Layout';
-import TabelaGrupo from '@/components/grupo/TabelaGrupo';
 import Botao from '@/components/Botao';
-import FormularioGrupo from '@/components/grupo/FormularioGrupo';
-import useGrupos from '@/hooks/grupo/useGrupos';
+import usePessoas from '../../hooks/pessoa/usePessoas';
+import TabelaPessoa from '../../components/pessoa/TabelaPessoa';
+import FormularioPessoa from '@/components/pessoa/FormularioPessoa';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
   const {
-    grupo,
-    grupos,
-    editarGrupo,
-    novoGrupo,
-    salvarGrupo,
-    excluirGrupo,
-    detalharGrupo,
+    pessoa,
+    pessoas,
+    editarPessoa,
+    novaPessoa,
+    salvarPessoa,
+    excluirPessoa,
+    detalharPessoa,
     tabelaVisivel,
     exibirTabela,
     titulo
-  } = useGrupos()
+  } = usePessoas()
 
   return (
     <div className={`
@@ -33,21 +33,21 @@ export default function Home() {
           <>
             <div className="flex justify-end">
               <Botao cor="green" className="mb-4"
-                onClick={() => novoGrupo()}>
-                  Novo Grupo
+                onClick={() => novaPessoa()}>
+                  Nova Pessoa
               </Botao>
             </div>
-            <TabelaGrupo grupos={grupos}
-              detalharGrupo={detalharGrupo}
-              editarGrupo={editarGrupo}
-              excluirGrupo={excluirGrupo}
+            <TabelaPessoa pessoas={pessoas}
+              detalharPessoa={detalharPessoa}
+              editarPessoa={editarPessoa}
+              excluirPessoa={excluirPessoa}
             />
           </>
         ) : (
-          <FormularioGrupo
-            grupo={grupo}
-            cancelado={() => exibirTabela('Grupos')}
-            grupoMudou={salvarGrupo}
+          <FormularioPessoa
+            pessoa={pessoa}
+            cancelado={() => exibirTabela('Pessoas')}
+            pessoaMudou={salvarPessoa}
           />
         )}
       </Layout>

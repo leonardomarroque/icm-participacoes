@@ -1,8 +1,8 @@
 import Grupo from "@/core/grupo/Grupo"
 import GrupoRepository from "@/core/grupo/GrupoRepository"
 import { useState, useEffect } from "react"
-import GrupoCollection from "../server/db/GrupoCollection"
-import useTabelaOuFormulario from './useTabelaOuFormulario';
+import GrupoCollection from "../../server/db/GrupoCollection"
+import useTabelaOuFormulario from '../useTabelaOuFormulario';
 
 export default function useGrupos() {
 
@@ -18,7 +18,7 @@ export default function useGrupos() {
     function listarGrupos() {
       repo.listar().then(grupos => {
         setGrupos(grupos)
-        exibirTabela()
+        exibirTabela('Grupos')
       })
     }
 
