@@ -1,62 +1,62 @@
-import Grupo from "@/core/grupo/Grupo"
-import { IconeEditar, IconeExcluir, IconeDetalhar } from './Icones';
+import Pessoa from "@/core/pessoa/Pessoa"
+import { IconeDetalhar, IconeEditar, IconeExcluir } from "../Icones"
 
-interface TabelaProps {
-    grupos: Grupo[]
-    editarGrupo?: (grupo: Grupo) => void
-    excluirGrupo?: (grupo: Grupo) => void
-    detalharGrupo?: (grupo: Grupo) => void
+interface TabelaPessoaProps {
+    pessoas: Pessoa[]
+    editarPessoa?: (pessoa: Pessoa) => void
+    excluirPessoa?: (pessoa: Pessoa) => void
+    detalharPessoa?: (pessoa: Pessoa) => void
 }
 
-export default function Tabela (props: TabelaProps) {
+export default function TabelaPessoa (props: TabelaPessoaProps) {
 
-    const exibirAcoes = props.excluirGrupo || props.editarGrupo
+    const exibirAcoes = props.excluirPessoa || props.editarPessoa || props.detalharPessoa
 
     function renderizarCabecalho() {
         return (
             <tr>
                 <th className="text-left p-4">Nome</th>
-                <th className="text-left p-4">Quantidade de Eventos</th>
+                <th className="text-left p-4">Data de Entrada</th>
                 {exibirAcoes ? <th className="p-4">Ações</th> : false}
             </tr>
         )
     }
 
     function renderizarDados() {
-        return props.grupos?.map((grupo, i) => {
+        return props.pessoas?.map((pessoa, i) => {
             return (
-                <tr key={grupo.id}
+                <tr key={pessoa.id}
                     className={`m-auto ${i % 2 === 0 ? 'bg-purple-200' : 'bg-purple-100'}`}>
-                    <td className="text-left p-4">{grupo.nome}</td>
-                    <td className="text-left p-4">{grupo.quantidadeEventos}</td>
-                    {exibirAcoes ? renderizarAcoes(grupo) : false}
+                    <td className="text-left p-4">{pessoa.nome}</td>
+                    <td className="text-left p-4">{pessoa.dataEntrada.toString()}</td>
+                    {exibirAcoes ? renderizarAcoes(pessoa) : false}
                 </tr>
             )
         })
     }
 
-    function renderizarAcoes(grupo: Grupo) {
+    function renderizarAcoes(pessoa: Pessoa) {
         return (
             <td>
                 <div className="flex justify-center items-center">
-                    {props.detalharGrupo ? (
-                        <button onClick={() => props.detalharGrupo?.(grupo)} className={`
+                    {props.detalharPessoa ? (
+                        <button onClick={() => props.detalharPessoa?.(pessoa)} className={`
                             flex justify-center items-center text-gray-800
                             rounded-full hover:bg-purple-50 p-2 m-1
                         `}>
                             {IconeDetalhar}
                         </button>
                     ) : false}
-                    {props.editarGrupo ? (
-                        <button onClick={() => props.editarGrupo?.(grupo)} className={`
+                    {props.editarPessoa ? (
+                        <button onClick={() => props.editarPessoa?.(pessoa)} className={`
                             flex justify-center items-center text-green-600
                             rounded-full hover:bg-purple-50 p-2 m-1
                         `}>
                             {IconeEditar}
                         </button>
                     ) : false}
-                    {props.excluirGrupo ? (
-                        <button onClick={() => props.excluirGrupo?.(grupo)} className={`
+                    {props.excluirPessoa ? (
+                        <button onClick={() => props.excluirPessoa?.(pessoa)} className={`
                             flex justify-center items-center text-red-500
                             rounded-full hover:bg-purple-50 p-2 m-1
                         `}>

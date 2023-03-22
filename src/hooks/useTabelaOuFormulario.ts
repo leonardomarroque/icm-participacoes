@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 export default function useTabelaOuFormulario() {
     const [visivel, setVisivel] = useState<'tabela' | 'formulario'>('tabela')
-    const [titulo, setTitulo] = useState('Grupos')
+    const [titulo, setTitulo] = useState('')
 
-    const exibirTabela = () => {
-        setTitulo('Grupos')
+    const exibirTabela = (titulo: string) => {
+        setTitulo(titulo)
         setVisivel('tabela')
     }
 
