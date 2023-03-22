@@ -1,5 +1,6 @@
 import Grupo from "@/core/grupo/Grupo"
 import { IconeEditar, IconeExcluir, IconePessoas } from '../Icones';
+import Link from "next/link";
 
 interface TabelaGrupoProps {
     grupos: Grupo[]
@@ -40,14 +41,14 @@ export default function TabelaGrupo (props: TabelaGrupoProps) {
             <td>
                 <div className="flex justify-center items-center">
                     {props.detalharGrupo ? (
-                        <a href="/pessoa">
+                        <Link href="/pessoa">
                             <button title="Detalhar" className={`
                                 flex justify-center items-center text-gray-800
                                 rounded-full hover:bg-purple-50 p-2 m-1
                             `}>
                                 {IconePessoas}
                             </button>
-                        </a>
+                        </Link>
                     ) : false}
                     {props.editarGrupo ? (
                         <button title="Editar" onClick={() => props.editarGrupo?.(grupo)} className={`
