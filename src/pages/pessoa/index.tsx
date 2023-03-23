@@ -1,13 +1,13 @@
 import { Inter } from 'next/font/google'
 import Layout from '@/components/Layout';
 import Botao from '@/components/Botao';
-import usePessoas from '../../hooks/pessoa/usePessoas';
-import TabelaPessoa from '../../components/pessoa/TabelaPessoa';
+import usePessoas from '@/hooks/pessoa/usePessoas';
+import TabelaPessoa from '@/components/pessoa/TabelaPessoa';
 import FormularioPessoa from '@/components/pessoa/FormularioPessoa';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Pessoa() {
 
   const {
     pessoa,
