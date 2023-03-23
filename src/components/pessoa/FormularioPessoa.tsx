@@ -2,6 +2,7 @@ import Pessoa from "@/core/pessoa/Pessoa";
 import { useState } from 'react';
 import Botao from "../Botao";
 import Entrada from "../Entrada";
+import { Timestamp } from 'firebase/firestore';
 
 interface FormularioPessoaProps {
     pessoa: Pessoa
@@ -12,7 +13,20 @@ interface FormularioPessoaProps {
 export default function FormularioPessoa (props: FormularioPessoaProps) {
     const id = props.pessoa?.id ?? null
     const [nome, setNome] = useState(props.pessoa?.nome ?? '')
-    const [dataEntrada, setDataEntrada] = useState(props.pessoa?.dataEntrada ?? Date.now())
+    const [dataEntrada, setDataEntrada] = useState(props.pessoa?.dataEntrada.toDate().toISOString().substring(0, 10))
+
+    function timezone(): string {
+        const timeZero = "T00:00:00"
+        const timezone = -(new Date().getTimezoneOffset())
+        const timezoneHour = Math.abs(Math.trunc(timezone / 60)).toString().padStart(2, '0')
+        const timezoneMinute = Math.abs(timezone % 60).toString().padStart(2, '0')
+        const dif = timezone >= 0 ? '+' : '-'
+
+        const timeWithTimezone = timeZero + dif + timezoneHour + ':' + timezoneMinute
+
+        return timeWithTimezone
+    }
+
     return (
         <div>
             <div>
@@ -24,7 +38,14 @@ export default function FormularioPessoa (props: FormularioPessoaProps) {
             </div>
             <div className="flex justify-end mt-5">
                 <Botao cor="blue" className="mr-2"
-                    onClick={() => props.pessoaMudou?.(new Pessoa(nome, dataEntrada, id))}>
+                    onClick={() => props.pessoaMudou?.(
+                        new Pessoa(
+                            nome,
+                            Timestamp.fromDate(new Date(dataEntrada + timezone())),
+                            id)
+                        )
+                    }
+                >
                     {id ? 'Alterar' : 'Salvar'}
                 </Botao>
                 <Botao onClick={props.cancelado}>

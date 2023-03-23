@@ -1,6 +1,7 @@
-import Pessoa from '@/core/pessoa/Pessoa';
-import firebase from '../config';
-import PessoaRepository from '@/core/pessoa/PessoaRepository';
+import { database } from '../config'
+import Pessoa from '@/core/pessoa/Pessoa'
+import PessoaRepository from '@/core/pessoa/PessoaRepository'
+import { QueryDocumentSnapshot, SnapshotOptions, collection, addDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore"
 
 export default class PessoaCollection implements PessoaRepository {
 
@@ -11,33 +12,40 @@ export default class PessoaCollection implements PessoaRepository {
                 dataEntrada: pessoa.dataEntrada
             }
         },
-        fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Pessoa {
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Pessoa {
             const dados = snapshot.data(options)
             return new Pessoa(dados.nome, dados.dataEntrada, snapshot.id)
         }
     }
 
-    async salvar(pessoa: Pessoa): Promise<Pessoa> {
-        if (pessoa?.id) {
-            await this.#colecao().doc(pessoa.id).set(pessoa)
-            return pessoa
-        } else {
-            const docRef = await this.#colecao().add(pessoa)
-            const doc = await docRef.get()
-            return doc.data()!
+
+    async salvar(pessoa: Pessoa): Promise<void> {
+        try {
+            if (pessoa?.id) {
+                const pessoaRef = doc(this.#colecao, pessoa.id)
+                await setDoc(pessoaRef, pessoa)
+            } else {
+                await addDoc(this.#colecao, pessoa)
+            }
+        } catch (error) {
+            console.error(error)
         }
+
     }
 
     async excluir(pessoa: Pessoa): Promise<void> {
-        return this.#colecao().doc(pessoa.id).delete()
+        try {
+            const pessoaRef = doc(this.#colecao, pessoa.id)
+            await deleteDoc(pessoaRef)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     async listar(): Promise<Pessoa[]> {
-        const query = await this.#colecao().get()
+        const query = await getDocs(this.#colecao)
         return query.docs.map(doc => doc.data()) ?? []
     }
 
-    #colecao() {
-        return firebase.firestore().collection('pessoas').withConverter(this.#conversor)
-    }
+    #colecao = collection(database, 'pessoas').withConverter(this.#conversor)
 }

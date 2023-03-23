@@ -1,15 +1,16 @@
+import { Timestamp } from "firebase/firestore"
 import Evento from "../evento/Evento"
 
 export default class Pessoa {
     #id: string
     #nome: string
-    #dataEntrada: Date
+    #dataEntrada: Timestamp
     #dataSaida?: Date
     #subgrupo?: string
     #notas?: string
     #participacoes?: Evento[]
 
-    constructor(nome: string, dataEntrada: Date = new Date(), id: string = "") {
+    constructor(nome: string, dataEntrada: Timestamp = Timestamp.now(), id: string = "") {
         this.#nome = nome
         this.#dataEntrada = dataEntrada
         this.#id = id

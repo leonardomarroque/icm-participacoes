@@ -1,6 +1,7 @@
-import firebase from '../config';
+import { database } from '../config'
 import Grupo from '@/core/grupo/Grupo'
 import GrupoRepository from '@/core/grupo/GrupoRepository'
+import { QueryDocumentSnapshot, SnapshotOptions, collection, addDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore"
 
 export default class GrupoCollection implements GrupoRepository {
 
@@ -11,33 +12,40 @@ export default class GrupoCollection implements GrupoRepository {
                 quantidadeEventos: grupo.quantidadeEventos
             }
         },
-        fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Grupo {
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Grupo {
             const dados = snapshot.data(options)
             return new Grupo(dados.nome, dados.quantidadeEventos, snapshot.id)
         }
     }
 
-    async salvar(grupo: Grupo): Promise<Grupo> {
-        if (grupo?.id) {
-            await this.#colecao().doc(grupo.id).set(grupo)
-            return grupo
-        } else {
-            const docRef = await this.#colecao().add(grupo)
-            const doc = await docRef.get()
-            return doc.data()!
+
+    async salvar(grupo: Grupo) {
+        try {
+            if (grupo?.id) {
+                const grupoRef = doc(this.#colecao, grupo.id)
+                await setDoc(grupoRef, grupo)
+            } else {
+                await addDoc(this.#colecao, grupo)
+            }
+        } catch (error) {
+            console.error(error)
         }
+
     }
 
     async excluir(grupo: Grupo): Promise<void> {
-        return this.#colecao().doc(grupo.id).delete()
+        try {
+            const grupoRef = doc(this.#colecao, grupo.id)
+            await deleteDoc(grupoRef)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     async listar(): Promise<Grupo[]> {
-        const query = await this.#colecao().get()
+        const query = await getDocs(this.#colecao)
         return query.docs.map(doc => doc.data()) ?? []
     }
 
-    #colecao() {
-        return firebase.firestore().collection('grupos').withConverter(this.#conversor)
-    }
+    #colecao = collection(database, 'grupos').withConverter(this.#conversor)
 }
