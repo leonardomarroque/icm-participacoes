@@ -28,7 +28,7 @@ export default function TabelaPessoa (props: TabelaPessoaProps) {
                 <tr key={pessoa.id}
                     className={`m-auto ${i % 2 === 0 ? 'bg-purple-200' : 'bg-purple-100'}`}>
                     <td className="text-left p-4">{pessoa.nome}</td>
-                    <td className="text-left p-4">{pessoa.dataEntrada.toString()}</td>
+                    <td className="text-left p-4">{pessoa.dataEntrada.toDate().toLocaleDateString()}</td>
                     {exibirAcoes ? renderizarAcoes(pessoa) : false}
                 </tr>
             )

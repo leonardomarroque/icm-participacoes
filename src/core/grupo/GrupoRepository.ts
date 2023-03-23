@@ -1,7 +1,7 @@
 import Grupo from "@/core/grupo/Grupo";
 
 export default interface GrupoRepository {
-    salvar(grupo: Grupo): Promise<Grupo>
+    salvar(grupo: Grupo): Promise<void>
     excluir(grupo: Grupo): Promise<void>
     listar(): Promise<Grupo[]>
 }
