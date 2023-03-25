@@ -3,6 +3,7 @@ import PessoaCollection from "@/server/db/PessoaCollection"
 import { useState, useEffect } from "react"
 import useTabelaOuFormulario from "../useTabelaOuFormulario"
 import Pessoa from "@/core/pessoa/Pessoa"
+import { useRouter } from "next/router"
 
 export default function usePessoas() {
 
@@ -12,24 +13,33 @@ export default function usePessoas() {
 
     const [pessoa, setPessoa] = useState<Pessoa>(Pessoa.vazio())
     const [pessoas, setPessoas] = useState<Pessoa[]>([])
-  
+
+    const { query } = useRouter()
+    const grupoId = query.grupoId as string
+    
     useEffect(listarPessoas, [])
-  
+    
     function listarPessoas() {
-      repo.listar().then(pessoas => {
-        setPessoas(pessoas)
-        exibirTabela('Pessoas')
-      })
-    }
+      if(!grupoId) {
+        return
+      } else {
+        repo.listar(grupoId).then(pessoas => {
+          setPessoas(pessoas)
+          exibirTabela('Pessoas')
+        })
+      }
+   }
 
     function detalharPessoa(pessoa: Pessoa) {
       exibirFormulario('Detalhar Pessoa')
       setPessoa(pessoa)
+      console.log(pessoa)
     }
   
     function editarPessoa(pessoa: Pessoa) {
       exibirFormulario('Editar Pessoa')
       setPessoa(pessoa)
+      console.log(pessoa)
     }
   
     async function excluirPessoa(pessoa: Pessoa) {

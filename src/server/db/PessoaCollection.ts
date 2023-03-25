@@ -1,7 +1,8 @@
+import Grupo from '@/core/grupo/Grupo'
 import { database } from '../config'
 import Pessoa from '@/core/pessoa/Pessoa'
 import PessoaRepository from '@/core/pessoa/PessoaRepository'
-import { QueryDocumentSnapshot, SnapshotOptions, collection, addDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore"
+import { QueryDocumentSnapshot, SnapshotOptions, collection, addDoc, doc, setDoc, deleteDoc, getDocs, where, query } from "firebase/firestore"
 
 export default class PessoaCollection implements PessoaRepository {
 
@@ -9,12 +10,13 @@ export default class PessoaCollection implements PessoaRepository {
         toFirestore(pessoa: Pessoa) {
             return {
                 nome: pessoa.nome,
-                dataEntrada: pessoa.dataEntrada
+                dataEntrada: pessoa.dataEntrada,
+                grupoId: pessoa.grupoId
             }
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Pessoa {
             const dados = snapshot.data(options)
-            return new Pessoa(dados.nome, dados.dataEntrada, snapshot.id)
+            return new Pessoa(dados.nome, dados.dataEntrada,snapshot.id, dados.grupoId)
         }
     }
 
@@ -42,9 +44,17 @@ export default class PessoaCollection implements PessoaRepository {
         }
     }
 
-    async listar(): Promise<Pessoa[]> {
-        const query = await getDocs(this.#colecao)
-        return query.docs.map(doc => doc.data()) ?? []
+    async excluirPessoasGrupo(grupo: Grupo): Promise<void> {
+        const querySnapshot = await getDocs(query(this.#colecao, where("grupoId", "==",grupo.id)))
+        querySnapshot.docs.forEach(async document => {
+            const pessoaRef = doc(this.#colecao, document.id)
+            await deleteDoc(pessoaRef)
+        })
+    }
+
+    async listar(grupoId: string): Promise<Pessoa[]> {
+        const querySnapshot = await getDocs(query(this.#colecao, where("grupoId", "==", grupoId)))
+        return querySnapshot.docs.map(doc => doc.data()) ?? []
     }
 
     #colecao = collection(database, 'pessoas').withConverter(this.#conversor)

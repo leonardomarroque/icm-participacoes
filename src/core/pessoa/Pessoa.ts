@@ -5,15 +5,17 @@ export default class Pessoa {
     #id: string
     #nome: string
     #dataEntrada: Timestamp
+    #grupoId: string
     #dataSaida?: Date
     #subgrupo?: string
     #notas?: string
     #participacoes?: Evento[]
 
-    constructor(nome: string, dataEntrada: Timestamp = Timestamp.now(), id: string = "") {
+    constructor(nome: string, dataEntrada: Timestamp = Timestamp.now(), id: string = "", grupoId: string = "") {
         this.#nome = nome
         this.#dataEntrada = dataEntrada
         this.#id = id
+        this.#grupoId = grupoId
     }
     
     static vazio() {
@@ -46,5 +48,9 @@ export default class Pessoa {
 
     get participacoes() {
         return this.#participacoes
+    }
+
+    get grupoId() {
+        return this.#grupoId
     }
 }

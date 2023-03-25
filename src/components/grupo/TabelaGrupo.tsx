@@ -41,7 +41,10 @@ export default function TabelaGrupo (props: TabelaGrupoProps) {
             <td>
                 <div className="flex justify-center items-center">
                     {props.detalharGrupo ? (
-                        <Link href="/pessoa">
+                        <Link href={{
+                            pathname: '/grupo/[grupoId]/pessoa',
+                            query: { grupoId: grupo.id }
+                        }}>
                             <button title="Detalhar" className={`
                                 flex justify-center items-center text-gray-800
                                 rounded-full hover:bg-purple-50 p-2 m-1

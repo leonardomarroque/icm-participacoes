@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Botao from "../Botao";
 import Entrada from "../Entrada";
 import { Timestamp } from 'firebase/firestore';
+import { useRouter } from "next/router";
 
 interface FormularioPessoaProps {
     pessoa: Pessoa
@@ -14,6 +15,10 @@ export default function FormularioPessoa (props: FormularioPessoaProps) {
     const id = props.pessoa?.id ?? null
     const [nome, setNome] = useState(props.pessoa?.nome ?? '')
     const [dataEntrada, setDataEntrada] = useState(props.pessoa?.dataEntrada.toDate().toISOString().substring(0, 10))
+    
+    const { query } = useRouter()
+    const grupoId = query.grupoId as string
+
 
     function timezone(): string {
         const timeZero = "T00:00:00"
@@ -42,7 +47,8 @@ export default function FormularioPessoa (props: FormularioPessoaProps) {
                         new Pessoa(
                             nome,
                             Timestamp.fromDate(new Date(dataEntrada + timezone())),
-                            id)
+                            id,
+                            grupoId)
                         )
                     }
                 >
