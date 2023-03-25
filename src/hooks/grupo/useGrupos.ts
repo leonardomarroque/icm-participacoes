@@ -3,10 +3,13 @@ import GrupoRepository from "@/core/grupo/GrupoRepository"
 import { useState, useEffect } from "react"
 import GrupoCollection from "../../server/db/GrupoCollection"
 import useTabelaOuFormulario from '../useTabelaOuFormulario';
+import PessoaRepository from "@/core/pessoa/PessoaRepository";
+import PessoaCollection from "@/server/db/PessoaCollection";
 
 export default function useGrupos() {
 
     const repo: GrupoRepository = new GrupoCollection()
+    const repoPessoas: PessoaRepository = new PessoaCollection()
 
     const { titulo, tabelaVisivel, formularioVisivel, exibirTabela, exibirFormulario } = useTabelaOuFormulario()
 
@@ -34,6 +37,7 @@ export default function useGrupos() {
   
     async function excluirGrupo(grupo: Grupo) {
       await repo.excluir(grupo)
+      await repoPessoas.excluirPessoasGrupo(grupo)
       listarGrupos()
     }
   
